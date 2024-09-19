@@ -24,8 +24,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     // MARK: - Private methods
     private func setupSearchMusicScene() -> UIViewController {
         let viewController = SearchMusicViewController()
-        let interactor = SearchMusicInteractorImpl()
-        let presenter = SearchMusicPresenterImpl(interactor: interactor)
+        let presenter = SearchMusicPresenterImpl()
+        presenter.interactor = SearchMusicInteractorImpl()
         
         viewController.presenter = presenter
         presenter.view = viewController

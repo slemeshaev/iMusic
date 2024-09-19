@@ -9,12 +9,18 @@
 import UIKit
 
 protocol SearchMusicInteractor {
-    func fetchTrackList(for term: String, completion: @escaping (TrackListDto) -> Void)
+    func fetchTrackList(with keyword: String)
 }
 
 class SearchMusicInteractorImpl: SearchMusicInteractor {
-    // MARK: - SearchMusicInteractor
-    func fetchTrackList(for term: String, completion: @escaping (TrackListDto) -> Void) {
-        print(#function)
+    // MARK: - Properties
+    private let networkFetcher = NetworkFetcher()
+    weak var presenter: SearchMusicPresenter?
+    
+    // MARK: - SearchMusicInteractorInput
+    func fetchTrackList(with keyword: String) {
+        networkFetcher.fetchTracks(with: keyword) { trackList in
+            print(trackList ?? "")
+        }
     }
 }

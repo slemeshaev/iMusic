@@ -8,22 +8,17 @@
 
 import Foundation
 
-protocol SearchMusicPresenter {
-    func viewDidLoad()
+protocol SearchMusicPresenter: AnyObject {
+    func searchTracks(with keyword: String)
 }
 
 class SearchMusicPresenterImpl: SearchMusicPresenter {
     // MARK: - Properties
     weak var view: SearchMusicView?
-    var interactor: SearchMusicInteractor
+    var interactor: SearchMusicInteractor?
     
-    // MARK: - Init
-    init(interactor: SearchMusicInteractor) {
-        self.interactor = interactor
-    }
-    
-    // MARK: - ToDoListPresenter
-    func viewDidLoad() {
-        print(#function, #file)
+    // MARK: - SearchMusicPresenter
+    func searchTracks(with keyword: String) {
+        interactor?.fetchTrackList(with: keyword)
     }
 }

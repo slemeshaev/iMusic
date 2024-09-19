@@ -8,4 +8,6 @@
 
 import Foundation
 
-struct TrackListDto {}
+struct TrackListDto: Decodable {
+    let results: [TrackDto]
+}

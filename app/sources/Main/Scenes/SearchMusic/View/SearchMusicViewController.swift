@@ -9,16 +9,16 @@
 import UIKit
 
 protocol SearchMusicView: AnyObject {
-    func displayTrackList()
+    func displayTrackList(_ trackList: TrackList)
 }
 
-class SearchMusicViewController: UIViewController {
+class SearchMusicViewController: UIViewController, SearchMusicView {
     // MARK: - Private properties
     private let searchController = UISearchController(searchResultsController: nil)
-    private let trackList = [TrackModel]()
+    private let trackList = TrackList([])
     
     // MARK: - Public properties
-    var presenter: SearchMusicPresenter!
+    var presenter: SearchMusicPresenter?
     
     // MARK: - UI
     private lazy var tableView: UITableView = {
@@ -29,6 +29,12 @@ class SearchMusicViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        presenter?.searchTracks(with: "Rammstein")
+    }
+    
+    // MARK: - SearchMusicView
+    func displayTrackList(_ trackList: TrackList) {
+        print(trackList)
     }
 }
 
@@ -47,14 +53,7 @@ extension SearchMusicViewController: UITableViewDelegate, UITableViewDataSource 
 // MARK: - UISearchBarDelegate
 extension SearchMusicViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print(searchText)
-    }
-}
-
-// MARK: - SearchMusicView
-extension SearchMusicViewController: SearchMusicView {
-    func displayTrackList() {
-        print(#function, #file)
+        presenter?.searchTracks(with: searchText)
     }
 }
 

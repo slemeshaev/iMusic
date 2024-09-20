@@ -15,14 +15,24 @@ protocol SearchMusicInteractor {
 class SearchMusicInteractorImpl: SearchMusicInteractor {
     // MARK: - Properties
     private let networkFetcher = NetworkFetcher()
+    private var workItem: DispatchWorkItem?
+    
     weak var presenter: SearchMusicPresenter?
     
     // MARK: - SearchMusicInteractorInput
     func fetchTrackList(with keyword: String, completion: @escaping (TrackListDto?) -> Void) {
         guard keyword.count >= 3 else { return }
         
-        networkFetcher.fetchTracks(with: keyword) { trackList in
-            completion(trackList)
+        workItem?.cancel()
+        
+        let newItem = DispatchWorkItem { [weak self] in
+            self?.networkFetcher.fetchTracks(with: keyword) { trackList in
+                completion(trackList)
+            }
         }
+        
+        workItem = newItem
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: newItem)
     }
 }

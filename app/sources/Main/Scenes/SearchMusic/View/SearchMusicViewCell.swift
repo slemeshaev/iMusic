@@ -35,9 +35,16 @@ class SearchMusicViewCell: UITableViewCell {
         configureUI()
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        iconView.image = nil
+        titleLabel.text = nil
+        subtitleLabel.text = nil
+    }
+    
     // MARK: - Interface
     func configure(with model: Configurable) {
-        iconView.image = model.icon.uiImage
+        iconView.setImage(from: model.icon)
         titleLabel.text = model.title
         subtitleLabel.text = model.subtitle
     }

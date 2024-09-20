@@ -22,7 +22,7 @@ struct Track: Equatable {
 extension Track {
     init(dto: TrackDto) {
         self.id = String(dto.trackId)
-        self.icon = dto.artworkUrl60
+        self.icon = dto.artworkUrl100 ?? ""
         self.name = dto.trackName
         self.artist = dto.artistName
     }

@@ -18,12 +18,12 @@ class SearchMusicViewController: UIViewController {
         static let cellHeight: CGFloat = 60.0
     }
     
+    // MARK: - Public properties
+    var presenter: SearchMusicPresenter?
+    
     // MARK: - Private properties
     private let searchController = UISearchController(searchResultsController: nil)
     private var trackList = TrackList([])
-    
-    // MARK: - Public properties
-    var presenter: SearchMusicPresenter?
     
     // MARK: - UI
     private lazy var tableView: UITableView = {
@@ -90,7 +90,7 @@ extension SearchMusicViewController {
     
     // MARK: - Configure
     private func configureUI() {
-        configureNavigationBar(withTitle: "Search Track")
+        configureNavigationBar(withTitle: "Music Search")
         setupSearchBar()
         setupTableView()
     }

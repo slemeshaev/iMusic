@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		663C1D8E2C9DA6CD00B8F2E3 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663C1D8D2C9DA6CD00B8F2E3 /* ImageLoader.swift */; };
+		663C1D902C9DAF6100B8F2E3 /* UIImageView+Internal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663C1D8F2C9DAF6100B8F2E3 /* UIImageView+Internal.swift */; };
+		663C1D922C9DB1E800B8F2E3 /* ImageLoadingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663C1D912C9DB1E800B8F2E3 /* ImageLoadingError.swift */; };
 		666CD18A2C9BEE13007DB39A /* SearchMusicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666CD1892C9BEE13007DB39A /* SearchMusicViewController.swift */; };
 		666CD18C2C9BF545007DB39A /* TrackDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666CD18B2C9BF545007DB39A /* TrackDto.swift */; };
 		666CD18E2C9C004D007DB39A /* SearchMusicInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666CD18D2C9C004D007DB39A /* SearchMusicInteractor.swift */; };
@@ -28,9 +31,13 @@
 		6692CC012C9CB81C00E0435A /* String+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6692CC002C9CB81C00E0435A /* String+Color.swift */; };
 		6692CC032C9CB8E500E0435A /* SearchMusicViewCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6692CC022C9CB8E500E0435A /* SearchMusicViewCellModel.swift */; };
 		6692CC052C9CBCE300E0435A /* UIViewController+Internal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6692CC042C9CBCE300E0435A /* UIViewController+Internal.swift */; };
+		66DA78002C9D76870068D28F /* images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66DA77FF2C9D76870068D28F /* images.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		663C1D8D2C9DA6CD00B8F2E3 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
+		663C1D8F2C9DAF6100B8F2E3 /* UIImageView+Internal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Internal.swift"; sourceTree = "<group>"; };
+		663C1D912C9DB1E800B8F2E3 /* ImageLoadingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoadingError.swift; sourceTree = "<group>"; };
 		666CD1892C9BEE13007DB39A /* SearchMusicViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMusicViewController.swift; sourceTree = "<group>"; };
 		666CD18B2C9BF545007DB39A /* TrackDto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackDto.swift; sourceTree = "<group>"; };
 		666CD18D2C9C004D007DB39A /* SearchMusicInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMusicInteractor.swift; sourceTree = "<group>"; };
@@ -54,6 +61,7 @@
 		6692CC002C9CB81C00E0435A /* String+Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Color.swift"; sourceTree = "<group>"; };
 		6692CC022C9CB8E500E0435A /* SearchMusicViewCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMusicViewCellModel.swift; sourceTree = "<group>"; };
 		6692CC042C9CBCE300E0435A /* UIViewController+Internal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Internal.swift"; sourceTree = "<group>"; };
+		66DA77FF2C9D76870068D28F /* images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = images.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,10 +75,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		663C1D8C2C9DA6B500B8F2E3 /* ImageLoader */ = {
+			isa = PBXGroup;
+			children = (
+				663C1D8D2C9DA6CD00B8F2E3 /* ImageLoader.swift */,
+				663C1D912C9DB1E800B8F2E3 /* ImageLoadingError.swift */,
+			);
+			path = ImageLoader;
+			sourceTree = "<group>";
+		};
 		666CD1932C9C0A18007DB39A /* Services */ = {
 			isa = PBXGroup;
 			children = (
 				666CD1962C9C106A007DB39A /* NetworkClient */,
+				663C1D8C2C9DA6B500B8F2E3 /* ImageLoader */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -124,6 +142,7 @@
 			isa = PBXGroup;
 			children = (
 				667046C22C99B91000D02583 /* app.xcassets */,
+				66DA77FF2C9D76870068D28F /* images.xcassets */,
 			);
 			path = resources;
 			sourceTree = "<group>";
@@ -258,6 +277,7 @@
 				6692CBFE2C9CB80400E0435A /* String+Image.swift */,
 				6692CC002C9CB81C00E0435A /* String+Color.swift */,
 				6692CC042C9CBCE300E0435A /* UIViewController+Internal.swift */,
+				663C1D8F2C9DAF6100B8F2E3 /* UIImageView+Internal.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -340,6 +360,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				667046C32C99B91000D02583 /* app.xcassets in Resources */,
+				66DA78002C9D76870068D28F /* images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -364,6 +385,9 @@
 				666CD18C2C9BF545007DB39A /* TrackDto.swift in Sources */,
 				666CD1922C9C01DD007DB39A /* SearchMusicPresenter.swift in Sources */,
 				6692CBF72C9CB11200E0435A /* RequestMethod.swift in Sources */,
+				663C1D8E2C9DA6CD00B8F2E3 /* ImageLoader.swift in Sources */,
+				663C1D902C9DAF6100B8F2E3 /* UIImageView+Internal.swift in Sources */,
+				663C1D922C9DB1E800B8F2E3 /* ImageLoadingError.swift in Sources */,
 				6692CC032C9CB8E500E0435A /* SearchMusicViewCellModel.swift in Sources */,
 				667046BA2C99B90F00D02583 /* AppDelegate.swift in Sources */,
 				6692CC012C9CB81C00E0435A /* String+Color.swift in Sources */,

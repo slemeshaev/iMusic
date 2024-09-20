@@ -11,7 +11,8 @@ import Foundation
 final class NetworkFetcher {
     // MARK: - Interface
     func fetchTracks(with term: String, completion: @escaping (TrackListDto?) -> Void) {
-        let request = Request(method: .get, parameters: ["term": term])
+        let parameters = ["term": term, "limit": "20", "media": "music"]
+        let request = Request(method: .get, parameters: parameters)
         
         networkService.sendRequest(request) { (data, error) in
             if let error = error {

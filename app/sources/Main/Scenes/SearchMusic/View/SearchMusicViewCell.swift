@@ -35,6 +35,12 @@ class SearchMusicViewCell: UITableViewCell {
         configureUI()
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        iconView.layer.cornerRadius = 8.0
+        iconView.layer.masksToBounds = true
+    }
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         iconView.image = nil
@@ -56,7 +62,6 @@ extension SearchMusicViewCell {
     private func iconViewSettings() -> UIImageView {
         let view = UIImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .green
         return view
     }
     
@@ -65,6 +70,7 @@ extension SearchMusicViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 16.0)
         label.textColor = UIColor.black
+        label.lineBreakMode = .byTruncatingTail
         return label
     }
     
@@ -73,6 +79,7 @@ extension SearchMusicViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 14.0)
         label.textColor = UIColor.gray
+        label.lineBreakMode = .byTruncatingTail
         return label
     }
     
@@ -101,6 +108,7 @@ extension SearchMusicViewCell {
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: iconView.topAnchor, constant: 4.0),
             titleLabel.leadingAnchor.constraint(equalTo: iconView.trailingAnchor, constant: 10.0),
+            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20)
         ])
     }
     
@@ -110,6 +118,7 @@ extension SearchMusicViewCell {
         NSLayoutConstraint.activate([
             subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4.0),
             subtitleLabel.leadingAnchor.constraint(equalTo: iconView.trailingAnchor, constant: 10.0),
+            subtitleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20)
         ])
     }
 }

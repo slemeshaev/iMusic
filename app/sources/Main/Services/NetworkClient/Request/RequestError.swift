@@ -16,6 +16,8 @@ enum RequestError: Error, Equatable, CustomDebugStringConvertible {
     /// fetch data
     case fetchDataError(String)
     
+    case noResultsError(String)
+    
     // MARK: - CustomDebugStringConvertible
     var debugDescription: String {
         switch self {
@@ -25,6 +27,8 @@ enum RequestError: Error, Equatable, CustomDebugStringConvertible {
             return "Decoding response error: \(message)"
         case .fetchDataError(let message):
             return "Error received retrieving data: \(message)"
+        case .noResultsError:
+            return "Failed to get results"
         }
     }
 }

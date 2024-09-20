@@ -19,6 +19,8 @@ class SearchMusicPresenterImpl: SearchMusicPresenter {
     
     // MARK: - SearchMusicPresenter
     func searchTracks(with keyword: String) {
+        view?.displayFooterView()
+        
         interactor?.fetchTrackList(with: keyword) { [weak self] trackListDto in
             guard let self = self else { return }
             
@@ -31,7 +33,7 @@ class SearchMusicPresenterImpl: SearchMusicPresenter {
                 
                 self.view?.displayTrackList(list)
             } else {
-                // Обработка ошибки
+                print(RequestError.noResultsError)
             }
         }
     }

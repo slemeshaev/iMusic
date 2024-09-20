@@ -9,13 +9,16 @@
 import UIKit
 
 protocol SearchMusicView: AnyObject {
-    func displayTrackList(_ trackList: TrackList)
+    func displayTrackList(_ tracks: TrackList)
+    func displayFooterView()
 }
 
 class SearchMusicViewController: UIViewController {
     // MARK: - Constants
     struct Constants {
         static let cellHeight: CGFloat = 60.0
+        static let emptyHeight: CGFloat = 0.0
+        static let headerHeight: CGFloat = 250.0
     }
     
     // MARK: - Public properties
@@ -23,12 +26,14 @@ class SearchMusicViewController: UIViewController {
     
     // MARK: - Private properties
     private let searchController = UISearchController(searchResultsController: nil)
-    private var trackList = TrackList([])
+    private var tracks = TrackList([])
     
     // MARK: - UI
     private lazy var tableView: UITableView = {
         tableViewSettings()
     }()
+    
+    private lazy var footerView = SearchMusicViewFooter()
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -40,13 +45,13 @@ class SearchMusicViewController: UIViewController {
 // MARK: - UITableViewDelegate, UITableViewDataSource
 extension SearchMusicViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return trackList.count
+        return tracks.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchMusicViewCell.reuseId,
                                                        for: indexPath) as? SearchMusicViewCell,
-              let track = trackList.atIndex(indexPath.row) else {
+              let track = tracks.atIndex(indexPath.row) else {
             return UITableViewCell()
         }
         
@@ -63,13 +68,30 @@ extension SearchMusicViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
     }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 18.0, weight: .semibold)
+        label.text = "Please enter search term above..."
+        label.textAlignment = .center
+        return label
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return tracks.count > 0 ? Constants.emptyHeight : Constants.headerHeight
+    }
 }
 
 // MARK: - SearchMusicView
 extension SearchMusicViewController: SearchMusicView {
-    func displayTrackList(_ trackList: TrackList) {
-        self.trackList = trackList
+    func displayFooterView() {
+        footerView.showLoader()
+    }
+    
+    func displayTrackList(_ tracks: TrackList) {
+        self.tracks = tracks
         tableView.reloadData()
+        footerView.hideLoader()
     }
 }
 
@@ -111,6 +133,8 @@ extension SearchMusicViewController {
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+        
+        tableView.tableFooterView = footerView
     }
     
     private func setupSearchBar() {

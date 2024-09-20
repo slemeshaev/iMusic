@@ -10,7 +10,7 @@ import Foundation
 
 struct TrackDto: Decodable {
     let trackId: Int
-    let trackViewUrl: String
     let trackName: String
     let artistName: String
+    let artworkUrl60: String
 }

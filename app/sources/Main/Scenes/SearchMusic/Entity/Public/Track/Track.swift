@@ -17,3 +17,13 @@ struct Track: Equatable {
         return lhs.id == rhs.id
     }
 }
+
+// MARK: - Mapping
+extension Track {
+    init(dto: TrackDto) {
+        self.id = String(dto.trackId)
+        self.icon = dto.artworkUrl60
+        self.name = dto.trackName
+        self.artist = dto.artistName
+    }
+}

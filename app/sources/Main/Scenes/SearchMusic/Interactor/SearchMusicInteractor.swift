@@ -9,7 +9,7 @@
 import UIKit
 
 protocol SearchMusicInteractor {
-    func fetchTrackList(with keyword: String)
+    func fetchTrackList(with keyword: String, completion: @escaping (TrackListDto?) -> Void)
 }
 
 class SearchMusicInteractorImpl: SearchMusicInteractor {
@@ -18,9 +18,11 @@ class SearchMusicInteractorImpl: SearchMusicInteractor {
     weak var presenter: SearchMusicPresenter?
     
     // MARK: - SearchMusicInteractorInput
-    func fetchTrackList(with keyword: String) {
+    func fetchTrackList(with keyword: String, completion: @escaping (TrackListDto?) -> Void) {
+        guard keyword.count >= 3 else { return }
+        
         networkFetcher.fetchTracks(with: keyword) { trackList in
-            print(trackList ?? "")
+            completion(trackList)
         }
     }
 }

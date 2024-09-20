@@ -19,6 +19,20 @@ class SearchMusicPresenterImpl: SearchMusicPresenter {
     
     // MARK: - SearchMusicPresenter
     func searchTracks(with keyword: String) {
-        interactor?.fetchTrackList(with: keyword)
+        interactor?.fetchTrackList(with: keyword) { [weak self] trackListDto in
+            guard let self = self else { return }
+            
+            if let results = trackListDto?.results {
+                let list = TrackList([])
+                
+                results.forEach { trackDto in
+                    list.add(Track(dto: trackDto))
+                }
+                
+                self.view?.displayTrackList(list)
+            } else {
+                // Обработка ошибки
+            }
+        }
     }
 }

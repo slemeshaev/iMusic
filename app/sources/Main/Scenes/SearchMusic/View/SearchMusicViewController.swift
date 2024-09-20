@@ -12,10 +12,15 @@ protocol SearchMusicView: AnyObject {
     func displayTrackList(_ trackList: TrackList)
 }
 
-class SearchMusicViewController: UIViewController, SearchMusicView {
+class SearchMusicViewController: UIViewController {
+    // MARK: - Constants
+    struct Constants {
+        static let cellHeight: CGFloat = 60.0
+    }
+    
     // MARK: - Private properties
     private let searchController = UISearchController(searchResultsController: nil)
-    private let trackList = TrackList([])
+    private var trackList = TrackList([])
     
     // MARK: - Public properties
     var presenter: SearchMusicPresenter?
@@ -29,12 +34,6 @@ class SearchMusicViewController: UIViewController, SearchMusicView {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        presenter?.searchTracks(with: "Rammstein")
-    }
-    
-    // MARK: - SearchMusicView
-    func displayTrackList(_ trackList: TrackList) {
-        print(trackList)
     }
 }
 
@@ -45,8 +44,28 @@ extension SearchMusicViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchMusicViewCell.reuseId,
+                                                       for: indexPath) as? SearchMusicViewCell,
+              let track = trackList.atIndex(indexPath.row) else {
+            return UITableViewCell()
+        }
+        
+        let model = SearchMusicViewCellModel(track: track)
+        cell.configure(with: model)
+        
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return Constants.cellHeight
+    }
+}
+
+// MARK: - SearchMusicView
+extension SearchMusicViewController: SearchMusicView {
+    func displayTrackList(_ trackList: TrackList) {
+        self.trackList = trackList
+        tableView.reloadData()
     }
 }
 
@@ -71,14 +90,14 @@ extension SearchMusicViewController {
     
     // MARK: - Configure
     private func configureUI() {
-        view.backgroundColor = UIColor.white
-        setupTableView()
+        configureNavigationBar(withTitle: "Search Track")
         setupSearchBar()
+        setupTableView()
     }
     
     // MARK: - Setups
     private func setupTableView() {
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(SearchMusicViewCell.self, forCellReuseIdentifier: SearchMusicViewCell.reuseId)
         
         view.addSubview(tableView)
         
@@ -91,8 +110,18 @@ extension SearchMusicViewController {
     }
     
     private func setupSearchBar() {
+        searchController.searchBar.delegate = self
+        searchController.searchBar.showsCancelButton = false
+        
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
-        searchController.searchBar.delegate = self
+        
+        searchController.searchBar.showsScopeBar = true
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.searchBar.placeholder = "Search"
+        
+        searchController.searchBar.searchTextField.textColor = UIColor.black
+        searchController.searchBar.searchTextField.backgroundColor = UIColor.white
     }
 }

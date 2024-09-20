@@ -30,6 +30,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         viewController.presenter = presenter
         presenter.view = viewController
         
-        return viewController
+        let navigationController = UINavigationController(rootViewController: viewController)
+        
+        return navigationController
     }
 }

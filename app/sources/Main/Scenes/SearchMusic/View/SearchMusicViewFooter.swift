@@ -10,12 +10,12 @@ import UIKit
 
 class SearchMusicViewFooter: UIView {
     // MARK: - UI
-    private lazy var titleLabel: UILabel = {
-        titleSettings()
-    }()
-    
     private lazy var activityIndicatorView: UIActivityIndicatorView = {
         activityIndicatorViewSettings()
+    }()
+    
+    private lazy var titleLabel: UILabel = {
+        titleSettings()
     }()
     
     // MARK: - Init
@@ -31,7 +31,7 @@ class SearchMusicViewFooter: UIView {
     // MARK: - Interface
     func showLoader() {
         activityIndicatorView.startAnimating()
-        titleLabel.text = "Loading..."
+        titleLabel.text = "Loading"
     }
     
     func hideLoader() {
@@ -43,19 +43,19 @@ class SearchMusicViewFooter: UIView {
 // MARK: - UI
 extension SearchMusicViewFooter {
     // MARK: - Settings
+    private func activityIndicatorViewSettings() -> UIActivityIndicatorView {
+        let view = UIActivityIndicatorView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.hidesWhenStopped = true
+        return view
+    }
+    
     private func titleSettings() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 14.0)
         label.textColor = .gray
         return label
-    }
-    
-    private func activityIndicatorViewSettings() -> UIActivityIndicatorView {
-        let view = UIActivityIndicatorView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.hidesWhenStopped = true
-        return view
     }
     
     // MARK: - Configure
@@ -70,8 +70,7 @@ extension SearchMusicViewFooter {
         
         NSLayoutConstraint.activate([
             activityIndicatorView.topAnchor.constraint(equalTo: topAnchor, constant: 8.0),
-            activityIndicatorView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            activityIndicatorView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20)
+            activityIndicatorView.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
     }
     

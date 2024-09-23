@@ -22,6 +22,8 @@
 		667046BA2C99B90F00D02583 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667046B92C99B90F00D02583 /* AppDelegate.swift */; };
 		667046BC2C99B90F00D02583 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667046BB2C99B90F00D02583 /* SceneDelegate.swift */; };
 		667046C32C99B91000D02583 /* app.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 667046C22C99B91000D02583 /* app.xcassets */; };
+		667CE6712CA04A2E0001D986 /* TrackDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667CE6702CA04A2E0001D986 /* TrackDetailsView.swift */; };
+		667CE6732CA057AE0001D986 /* UIWindow+Internal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667CE6722CA057AE0001D986 /* UIWindow+Internal.swift */; };
 		6692CBEE2C9C7BE100E0435A /* NetworkFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6692CBED2C9C7BE100E0435A /* NetworkFetcher.swift */; };
 		6692CBF32C9C9C5A00E0435A /* TrackList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6692CBF22C9C9C5A00E0435A /* TrackList.swift */; };
 		6692CBF52C9C9C7200E0435A /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6692CBF42C9C9C7200E0435A /* Track.swift */; };
@@ -53,6 +55,8 @@
 		667046BB2C99B90F00D02583 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		667046C22C99B91000D02583 /* app.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = app.xcassets; sourceTree = "<group>"; };
 		667046C72C99B91000D02583 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		667CE6702CA04A2E0001D986 /* TrackDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackDetailsView.swift; sourceTree = "<group>"; };
+		667CE6722CA057AE0001D986 /* UIWindow+Internal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Internal.swift"; sourceTree = "<group>"; };
 		6692CBED2C9C7BE100E0435A /* NetworkFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkFetcher.swift; sourceTree = "<group>"; };
 		6692CBF22C9C9C5A00E0435A /* TrackList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackList.swift; sourceTree = "<group>"; };
 		6692CBF42C9C9C7200E0435A /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
@@ -182,6 +186,7 @@
 			isa = PBXGroup;
 			children = (
 				667046D42C99C70600D02583 /* SearchMusic */,
+				667CE66E2CA049040001D986 /* TrackDetails */,
 			);
 			path = Scenes;
 			sourceTree = "<group>";
@@ -241,6 +246,22 @@
 			path = Router;
 			sourceTree = "<group>";
 		};
+		667CE66E2CA049040001D986 /* TrackDetails */ = {
+			isa = PBXGroup;
+			children = (
+				667CE66F2CA04A140001D986 /* View */,
+			);
+			path = TrackDetails;
+			sourceTree = "<group>";
+		};
+		667CE66F2CA04A140001D986 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				667CE6702CA04A2E0001D986 /* TrackDetailsView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		6692CBEF2C9C7BEC00E0435A /* NetworkLayer */ = {
 			isa = PBXGroup;
 			children = (
@@ -281,6 +302,7 @@
 				6692CC002C9CB81C00E0435A /* String+Color.swift */,
 				6692CC042C9CBCE300E0435A /* UIViewController+Internal.swift */,
 				663C1D8F2C9DAF6100B8F2E3 /* UIImageView+Internal.swift */,
+				667CE6722CA057AE0001D986 /* UIWindow+Internal.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -378,8 +400,10 @@
 				66225FCD2C9DD4680071F920 /* SearchMusicViewFooter.swift in Sources */,
 				666CD19F2C9C188A007DB39A /* Request.swift in Sources */,
 				666CD18A2C9BEE13007DB39A /* SearchMusicViewController.swift in Sources */,
+				667CE6732CA057AE0001D986 /* UIWindow+Internal.swift in Sources */,
 				666CD1902C9C016D007DB39A /* TrackListDto.swift in Sources */,
 				6692CBF32C9C9C5A00E0435A /* TrackList.swift in Sources */,
+				667CE6712CA04A2E0001D986 /* TrackDetailsView.swift in Sources */,
 				6692CBEE2C9C7BE100E0435A /* NetworkFetcher.swift in Sources */,
 				6692CBFC2C9CB76600E0435A /* SearchMusicViewCell.swift in Sources */,
 				6692CC052C9CBCE300E0435A /* UIViewController+Internal.swift in Sources */,

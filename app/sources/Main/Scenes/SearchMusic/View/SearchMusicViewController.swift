@@ -66,6 +66,12 @@ extension SearchMusicViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let track = tracks.atIndex(indexPath.row)
+        let trackDetailsView = TrackDetailsView(frame: view.bounds)
+        
+        let window = UIWindow.keyWindow
+        window?.addSubview(trackDetailsView)
+        
         tableView.deselectRow(at: indexPath, animated: true)
     }
     

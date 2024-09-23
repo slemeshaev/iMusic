@@ -50,7 +50,7 @@ class SearchMusicViewCell: UITableViewCell {
     
     // MARK: - Interface
     func configure(with model: Configurable) {
-        iconView.setImage(from: model.icon)
+        iconView.setImage(from: model.smallIcon)
         titleLabel.text = model.title
         subtitleLabel.text = model.subtitle
     }

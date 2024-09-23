@@ -7,7 +7,8 @@
 //
 
 protocol Configurable {
-    var icon: String { get }
+    var smallIcon: String { get }
+    var bigIcon: String { get }
     var title: String { get }
     var subtitle: String { get }
 }

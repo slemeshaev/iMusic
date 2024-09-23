@@ -34,6 +34,27 @@ class TrackDetailsView: UIView {
         performanceTimeStackViewSettings()
     }()
     
+    
+    private lazy var trackTitleLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .boldSystemFont(ofSize: 24.0)
+        label.textAlignment = .center
+        label.textColor = .black
+        label.text = "Track Title"
+        return label
+    }()
+    
+    private lazy var authorTitleLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .systemFont(ofSize: 24.0)
+        label.textAlignment = .center
+        label.textColor = .systemPink
+        label.text = "Author"
+        return label
+    }()
+    
     private lazy var trackInfoStackView: UIStackView = {
         trackInfoStackViewSettings()
     }()
@@ -54,6 +75,13 @@ class TrackDetailsView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Interface
+    func configure(with model: Configurable) {
+        trackCoverImageView.setImage(from: model.bigIcon)
+        trackTitleLabel.text = model.title
+        authorTitleLabel.text = model.subtitle
     }
     
     // MARK: - Actions
@@ -137,20 +165,6 @@ extension TrackDetailsView {
     }
     
     private func trackInfoStackViewSettings() -> UIStackView {
-        let trackTitleLabel = UILabel()
-        trackTitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        trackTitleLabel.font = .boldSystemFont(ofSize: 24.0)
-        trackTitleLabel.textAlignment = .center
-        trackTitleLabel.textColor = .black
-        trackTitleLabel.text = "Track Title"
-        
-        let authorTitleLabel = UILabel()
-        authorTitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        authorTitleLabel.font = .systemFont(ofSize: 24.0)
-        authorTitleLabel.textAlignment = .center
-        authorTitleLabel.textColor = .systemPink
-        authorTitleLabel.text = "Author"
-        
         let stackView = UIStackView(arrangedSubviews: [trackTitleLabel, authorTitleLabel])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
@@ -233,7 +247,7 @@ extension TrackDetailsView {
         addSubview(contentStackView)
         
         NSLayoutConstraint.activate([
-            contentStackView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 32.0),
+            contentStackView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             contentStackView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 32.0),
             contentStackView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -32.0),
             contentStackView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -32.0)
@@ -285,13 +299,18 @@ extension TrackDetailsView {
     
     private func setupTrackInfoStackView() {
         contentStackView.addArrangedSubview(trackInfoStackView)
+        
+        NSLayoutConstraint.activate([
+            trackInfoStackView.widthAnchor.constraint(equalTo: performanceTimeStackView.widthAnchor),
+            trackInfoStackView.heightAnchor.constraint(equalTo: performanceTimeStackView.widthAnchor, multiplier: 0.2)
+        ])
     }
     
     private func setupTrackPlayerStackView() {
         contentStackView.addArrangedSubview(trackPlayerStackView)
         
         NSLayoutConstraint.activate([
-            trackPlayerStackView.heightAnchor.constraint(equalTo: trackPlayerStackView.widthAnchor, multiplier: 0.5)
+            trackPlayerStackView.heightAnchor.constraint(equalTo: trackPlayerStackView.widthAnchor, multiplier: 0.3)
         ])
     }
     

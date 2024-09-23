@@ -22,6 +22,15 @@ class SearchMusicViewCellModel: Configurable {
         track.icon
     }
     
+    var smallIcon: String {
+        track.icon
+    }
+    
+    var bigIcon: String {
+        return track.icon
+            .replacingOccurrences(of: "100x100", with: "600x600")
+    }
+    
     var title: String {
         track.name
     }

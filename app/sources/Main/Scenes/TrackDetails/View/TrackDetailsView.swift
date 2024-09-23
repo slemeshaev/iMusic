@@ -23,6 +23,24 @@ class TrackDetailsView: UIView {
         trackCoverViewSettings()
     }()
     
+    private lazy var backwardLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .left
+        label.text = "00:00"
+        label.textColor = .gray
+        return label
+    }()
+    
+    private lazy var forwardLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .right
+        label.text = "--:--"
+        label.textColor = .gray
+        return label
+    }()
+    
     private lazy var performanceProgressStackView: UIStackView = {
         performanceProgressStackViewSettings()
     }()
@@ -116,6 +134,8 @@ class TrackDetailsView: UIView {
         authorTitleLabel.text = model.subtitle
         
         playTrack(previewUrl: model.previewUrl)
+        monitorStartTime()
+        observePlayerCurrentTime()
     }
     
     // MARK: - Actions
@@ -135,9 +155,11 @@ class TrackDetailsView: UIView {
         if avPlayer.timeControlStatus == .paused {
             avPlayer.play()
             playStopButton.setImage("player.pause".uiImage, for: .normal)
+            enlargeTrackCoverImageView()
         } else {
             avPlayer.pause()
             playStopButton.setImage("player.play".uiImage, for: .normal)
+            reduceTrackCoverImageView()
         }
     }
     
@@ -148,6 +170,56 @@ class TrackDetailsView: UIView {
         
         avPlayer.replaceCurrentItem(with: playerItem)
         avPlayer.play()
+    }
+    
+    private func monitorStartTime() {
+        let time = CMTimeMake(value: 1, timescale: 2)
+        let times = [NSValue(time: time)]
+        
+        avPlayer.addBoundaryTimeObserver(forTimes: times, queue: .main) { [weak self] in
+            self?.enlargeTrackCoverImageView()
+        }
+    }
+    
+    private func observePlayerCurrentTime() {
+        let interval = CMTimeMake(value: 1, timescale: 2)
+        avPlayer.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
+            self?.backwardLabel.text = time.formattedTime()
+            
+            let durationTime = self?.avPlayer.currentItem?.duration ?? CMTimeMake(value: 1, timescale: 1)
+            let durationText = (durationTime - time).formattedTime() ?? ""
+            
+            self?.forwardLabel.text = "-\(durationText)"
+        }
+    }
+    
+    private func enlargeTrackCoverImageView() {
+        UIView.animate(
+            withDuration: 1.0,
+            delay: 0.0,
+            usingSpringWithDamping: 0.5,
+            initialSpringVelocity: 1.0,
+            options: .curveEaseInOut,
+            animations: {
+                self.trackCoverImageView.transform = .identity
+            },
+            completion: nil
+        )
+    }
+    
+    private func reduceTrackCoverImageView() {
+        UIView.animate(
+            withDuration: 1.0,
+            delay: 0.0,
+            usingSpringWithDamping: 0.5,
+            initialSpringVelocity: 1.0,
+            options: .curveEaseInOut,
+            animations: {
+                let scale: CGFloat = 0.8
+                self.trackCoverImageView.transform = CGAffineTransform(scaleX: scale, y: scale)
+            },
+            completion: nil
+        )
     }
 }
 
@@ -176,6 +248,12 @@ extension TrackDetailsView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.backgroundColor = .red
+        
+        let scale: CGFloat = 0.8
+        imageView.transform = CGAffineTransform(scaleX: scale, y: scale)
+        
+        imageView.layer.cornerRadius = 5.0
+        
         return imageView
     }
     
@@ -196,18 +274,6 @@ extension TrackDetailsView {
     }
     
     private func performanceTimeStackViewSettings() -> UIStackView {
-        let backwardLabel = UILabel()
-        backwardLabel.translatesAutoresizingMaskIntoConstraints = false
-        backwardLabel.textAlignment = .left
-        backwardLabel.text = "00:00"
-        backwardLabel.textColor = .gray
-        
-        let forwardLabel = UILabel()
-        forwardLabel.translatesAutoresizingMaskIntoConstraints = false
-        forwardLabel.textAlignment = .right
-        forwardLabel.text = "--:--"
-        forwardLabel.textColor = .gray
-        
         let stackView = UIStackView(arrangedSubviews: [backwardLabel, forwardLabel])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal

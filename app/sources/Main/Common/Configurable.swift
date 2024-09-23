@@ -11,4 +11,5 @@ protocol Configurable {
     var bigIcon: String { get }
     var title: String { get }
     var subtitle: String { get }
+    var previewUrl: String { get }
 }

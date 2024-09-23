@@ -38,4 +38,8 @@ class SearchMusicViewCellModel: Configurable {
     var subtitle: String {
         track.artist
     }
+    
+    var previewUrl: String {
+        track.previewUrl
+    }
 }

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVKit
 
 class TrackDetailsView: UIView {
     // MARK: - UI
@@ -67,6 +68,12 @@ class TrackDetailsView: UIView {
         soundValueStackViewSettings()
     }()
     
+    private let avPlayer: AVPlayer = {
+        let player = AVPlayer()
+        player.automaticallyWaitsToMinimizeStalling = false
+        return player
+    }()
+    
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -82,6 +89,8 @@ class TrackDetailsView: UIView {
         trackCoverImageView.setImage(from: model.bigIcon)
         trackTitleLabel.text = model.title
         authorTitleLabel.text = model.subtitle
+        
+        playTrack(previewUrl: model.previewUrl)
     }
     
     // MARK: - Actions
@@ -95,6 +104,15 @@ class TrackDetailsView: UIView {
     
     @objc func handleSoundVolomeSlider() {
         print(#function, #line)
+    }
+    
+    // MARK: - Private methods
+    private func playTrack(previewUrl: String) {
+        guard let url = URL(string: previewUrl) else { return }
+        let playerItem = AVPlayerItem(url: url)
+        
+        avPlayer.replaceCurrentItem(with: playerItem)
+        avPlayer.play()
     }
 }
 

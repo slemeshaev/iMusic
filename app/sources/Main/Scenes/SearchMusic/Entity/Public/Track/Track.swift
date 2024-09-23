@@ -11,6 +11,7 @@ struct Track: Equatable {
     let icon: String
     let name: String
     let artist: String
+    let previewUrl: String
     
     // MARK: - Equatable
     static func == (lhs: Track, rhs: Track) -> Bool {
@@ -25,5 +26,6 @@ extension Track {
         self.icon = dto.artworkUrl100 ?? ""
         self.name = dto.trackName
         self.artist = dto.artistName
+        self.previewUrl = dto.previewUrl ?? ""
     }
 }

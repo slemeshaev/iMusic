@@ -60,6 +60,31 @@ class TrackDetailsView: UIView {
         trackInfoStackViewSettings()
     }()
     
+    private lazy var backwardButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage("player.backward".uiImage, for: .normal)
+        button.tintColor = .black
+        return button
+    }()
+    
+    private lazy var playStopButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage("player.pause".uiImage, for: .normal)
+        button.tintColor = .black
+        button.addTarget(self, action: #selector(playStopButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var forwardButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage("player.forward".uiImage, for: .normal)
+        button.tintColor = .black
+        return button
+    }()
+    
     private lazy var trackPlayerStackView: UIStackView = {
         trackPlayerStackViewSettings()
     }()
@@ -104,6 +129,16 @@ class TrackDetailsView: UIView {
     
     @objc func handleSoundVolomeSlider() {
         print(#function, #line)
+    }
+    
+    @objc func playStopButtonTapped() {
+        if avPlayer.timeControlStatus == .paused {
+            avPlayer.play()
+            playStopButton.setImage("player.pause".uiImage, for: .normal)
+        } else {
+            avPlayer.pause()
+            playStopButton.setImage("player.play".uiImage, for: .normal)
+        }
     }
     
     // MARK: - Private methods
@@ -192,21 +227,6 @@ extension TrackDetailsView {
     }
     
     private func trackPlayerStackViewSettings() -> UIStackView {
-        let backwardButton = UIButton(type: .system)
-        backwardButton.translatesAutoresizingMaskIntoConstraints = false
-        backwardButton.setImage("player.backward".uiImage, for: .normal)
-        backwardButton.tintColor = .black
-        
-        let playStopButton = UIButton(type: .system)
-        playStopButton.translatesAutoresizingMaskIntoConstraints = false
-        playStopButton.setImage("player.play".uiImage, for: .normal)
-        playStopButton.tintColor = .black
-        
-        let forwardButton = UIButton(type: .system)
-        forwardButton.translatesAutoresizingMaskIntoConstraints = false
-        forwardButton.setImage("player.forward".uiImage, for: .normal)
-        forwardButton.tintColor = .black
-        
         let stackView = UIStackView(arrangedSubviews: [backwardButton, playStopButton, forwardButton])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal

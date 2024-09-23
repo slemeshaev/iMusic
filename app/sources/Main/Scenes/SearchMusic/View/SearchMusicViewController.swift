@@ -67,15 +67,15 @@ extension SearchMusicViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let track = tracks.atIndex(indexPath.row) else { return }
+        
         let trackDetailsView = TrackDetailsView(frame: view.bounds)
+        trackDetailsView.delegate = self
         
         let window = UIWindow.keyWindow
         window?.addSubview(trackDetailsView)
         
         let model = SearchMusicViewCellModel(track: track)
         trackDetailsView.configure(with: model)
-        
-        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -108,6 +108,35 @@ extension SearchMusicViewController: SearchMusicView {
 extension SearchMusicViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         presenter?.searchTracks(with: searchText)
+    }
+}
+
+// MARK: - TrackMovingDelegate
+extension SearchMusicViewController: TrackMovingDelegate {
+    func moveBackForPreviousTrack() -> SearchMusicViewCellModel? {
+        return track(isForwardTrack: false)
+    }
+    
+    func moveForwardForPreviousTrack() -> SearchMusicViewCellModel? {
+        return track(isForwardTrack: true)
+    }
+    
+    // MARK: - Private
+    private func track(isForwardTrack: Bool) -> SearchMusicViewCellModel? {
+        guard let indexPath = tableView.indexPathForSelectedRow else { return nil }
+        
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        let nextRow: Int = isForwardTrack ? (indexPath.row + 1) % tracks.count
+                                          : (indexPath.row - 1 + tracks.count) % tracks.count
+        let nextIndexPath = IndexPath(row: nextRow, section: indexPath.section)
+        
+        tableView.selectRow(at: nextIndexPath, animated: true, scrollPosition: .none)
+        
+        guard let track = tracks.atIndex(nextRow) else { return nil }
+        let model = SearchMusicViewCellModel(track: track)
+        
+        return model
     }
 }
 

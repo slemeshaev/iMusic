@@ -9,6 +9,11 @@
 import UIKit
 import AVKit
 
+protocol TrackMovingDelegate: AnyObject {
+    func moveBackForPreviousTrack() -> SearchMusicViewCellModel?
+    func moveForwardForPreviousTrack() -> SearchMusicViewCellModel?
+}
+
 class TrackDetailsView: UIView {
     // MARK: - UI
     private lazy var contentStackView: UIStackView = {
@@ -53,7 +58,6 @@ class TrackDetailsView: UIView {
         performanceTimeStackViewSettings()
     }()
     
-    
     private lazy var trackTitleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -83,6 +87,7 @@ class TrackDetailsView: UIView {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage("player.backward".uiImage, for: .normal)
         button.tintColor = .black
+        button.addTarget(self, action: #selector(previousTrackTapped), for: .touchUpInside)
         return button
     }()
     
@@ -100,6 +105,7 @@ class TrackDetailsView: UIView {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage("player.forward".uiImage, for: .normal)
         button.tintColor = .black
+        button.addTarget(self, action: #selector(nextTrackTapped), for: .touchUpInside)
         return button
     }()
     
@@ -124,6 +130,9 @@ class TrackDetailsView: UIView {
         player.automaticallyWaitsToMinimizeStalling = false
         return player
     }()
+    
+    // MARK: - Properties
+    weak var delegate: TrackMovingDelegate?
     
     // MARK: - Init
     override init(frame: CGRect) {
@@ -176,6 +185,16 @@ class TrackDetailsView: UIView {
             playStopButton.setImage("player.play".uiImage, for: .normal)
             reduceTrackCoverImageView()
         }
+    }
+    
+    @objc func previousTrackTapped() {
+        guard let model = delegate?.moveBackForPreviousTrack() else { return }
+        configure(with: model)
+    }
+    
+    @objc func nextTrackTapped() {
+        guard let model = delegate?.moveForwardForPreviousTrack() else { return }
+        configure(with: model)
     }
     
     // MARK: - Private methods

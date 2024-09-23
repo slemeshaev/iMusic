@@ -55,6 +55,19 @@ class TrackDetailsView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    // MARK: - Actions
+    @objc func dragDownButtonTapped() {
+        removeFromSuperview()
+    }
+    
+    @objc func handlePerformanceProgressSlider() {
+        print(#function, #line)
+    }
+    
+    @objc func handleSoundVolomeSlider() {
+        print(#function, #line)
+    }
 }
 
 // MARK: - UI
@@ -74,6 +87,7 @@ extension TrackDetailsView {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage("player.drag.down".uiImage, for: .normal)
+        button.addTarget(self, action: #selector(dragDownButtonTapped), for: .touchUpInside)
         return button
     }
     
@@ -96,6 +110,7 @@ extension TrackDetailsView {
         let slider = UISlider()
         slider.translatesAutoresizingMaskIntoConstraints = false
         slider.value = 0.0
+        slider.addTarget(self, action: #selector(handlePerformanceProgressSlider), for: .valueChanged)
         return slider
     }
     
@@ -145,17 +160,20 @@ extension TrackDetailsView {
     }
     
     private func trackPlayerStackViewSettings() -> UIStackView {
-        let backwardButton = UIButton()
+        let backwardButton = UIButton(type: .system)
         backwardButton.translatesAutoresizingMaskIntoConstraints = false
         backwardButton.setImage("player.backward".uiImage, for: .normal)
+        backwardButton.tintColor = .black
         
-        let playStopButton = UIButton()
+        let playStopButton = UIButton(type: .system)
         playStopButton.translatesAutoresizingMaskIntoConstraints = false
         playStopButton.setImage("player.play".uiImage, for: .normal)
+        playStopButton.tintColor = .black
         
-        let forwardButton = UIButton()
+        let forwardButton = UIButton(type: .system)
         forwardButton.translatesAutoresizingMaskIntoConstraints = false
         forwardButton.setImage("player.forward".uiImage, for: .normal)
+        forwardButton.tintColor = .black
         
         let stackView = UIStackView(arrangedSubviews: [backwardButton, playStopButton, forwardButton])
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -170,18 +188,19 @@ extension TrackDetailsView {
         let minValueImageView = UIImageView()
         minValueImageView.translatesAutoresizingMaskIntoConstraints = false
         minValueImageView.image = "player.min.sound".uiImage
-        minValueImageView.heightAnchor.constraint(equalToConstant: 16).isActive = true
-        minValueImageView.widthAnchor.constraint(equalTo: minValueImageView.heightAnchor).isActive = true
+        minValueImageView.widthAnchor.constraint(equalToConstant: 16.0).isActive = true
+        minValueImageView.heightAnchor.constraint(equalTo: minValueImageView.widthAnchor, multiplier: 0.9).isActive = true
         
         let slider = UISlider()
         slider.translatesAutoresizingMaskIntoConstraints = false
         slider.value = 1
+        slider.addTarget(self, action: #selector(handleSoundVolomeSlider), for: .valueChanged)
         
         let maxValueImageView = UIImageView()
         maxValueImageView.translatesAutoresizingMaskIntoConstraints = false
         maxValueImageView.image = "player.max.sound".uiImage
-        maxValueImageView.heightAnchor.constraint(equalToConstant: 16).isActive = true
-        maxValueImageView.widthAnchor.constraint(equalTo: maxValueImageView.heightAnchor).isActive = true
+        maxValueImageView.widthAnchor.constraint(equalToConstant: 16.0).isActive = true
+        maxValueImageView.heightAnchor.constraint(equalTo: maxValueImageView.widthAnchor, multiplier: 0.9).isActive = true
         
         let stackView = UIStackView(arrangedSubviews: [minValueImageView, slider, maxValueImageView])
         stackView.translatesAutoresizingMaskIntoConstraints = false

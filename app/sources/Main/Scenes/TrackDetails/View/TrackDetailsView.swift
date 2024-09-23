@@ -107,6 +107,14 @@ class TrackDetailsView: UIView {
         trackPlayerStackViewSettings()
     }()
     
+    private lazy var volumeSlider: UISlider = {
+        let slider = UISlider()
+        slider.translatesAutoresizingMaskIntoConstraints = false
+        slider.value = 0.5
+        slider.addTarget(self, action: #selector(handleSoundVolomeSlider), for: .valueChanged)
+        return slider
+    }()
+    
     private lazy var soundValueStackView: UIStackView = {
         soundValueStackViewSettings()
     }()
@@ -144,11 +152,18 @@ class TrackDetailsView: UIView {
     }
     
     @objc func handlePerformanceProgressSlider() {
-        print(#function, #line)
+        let percentage = performanceProgressSlider.value
+        
+        guard let duration = avPlayer.currentItem?.duration else { return }
+        let durationInSeconds = CMTimeGetSeconds(duration)
+        let seekTimeInSeconds = Float64(percentage) * durationInSeconds
+        let seetTime = CMTimeMakeWithSeconds(seekTimeInSeconds, preferredTimescale: 1)
+        
+        avPlayer.seek(to: seetTime)
     }
     
     @objc func handleSoundVolomeSlider() {
-        print(#function, #line)
+        avPlayer.volume = volumeSlider.value
     }
     
     @objc func playStopButtonTapped() {
@@ -190,9 +205,19 @@ class TrackDetailsView: UIView {
             let durationText = (durationTime - time).formattedTime() ?? ""
             
             self?.forwardLabel.text = "-\(durationText)"
+            self?.updateCurrentTimeSlider()
         }
     }
     
+    private func updateCurrentTimeSlider() {
+        let currentTimeSeconds = CMTimeGetSeconds(avPlayer.currentTime())
+        let durationSeconds = CMTimeGetSeconds(avPlayer.currentItem?.duration ?? CMTimeMake(value: 1, timescale: 1))
+        let percentage = currentTimeSeconds / durationSeconds
+        
+        performanceProgressSlider.value = Float(percentage)
+    }
+    
+    // MARK: - Animations
     private func enlargeTrackCoverImageView() {
         UIView.animate(
             withDuration: 1.0,
@@ -309,18 +334,13 @@ extension TrackDetailsView {
         minValueImageView.widthAnchor.constraint(equalToConstant: 16.0).isActive = true
         minValueImageView.heightAnchor.constraint(equalTo: minValueImageView.widthAnchor, multiplier: 0.9).isActive = true
         
-        let slider = UISlider()
-        slider.translatesAutoresizingMaskIntoConstraints = false
-        slider.value = 1
-        slider.addTarget(self, action: #selector(handleSoundVolomeSlider), for: .valueChanged)
-        
         let maxValueImageView = UIImageView()
         maxValueImageView.translatesAutoresizingMaskIntoConstraints = false
         maxValueImageView.image = "player.max.sound".uiImage
         maxValueImageView.widthAnchor.constraint(equalToConstant: 16.0).isActive = true
         maxValueImageView.heightAnchor.constraint(equalTo: maxValueImageView.widthAnchor, multiplier: 0.9).isActive = true
         
-        let stackView = UIStackView(arrangedSubviews: [minValueImageView, slider, maxValueImageView])
+        let stackView = UIStackView(arrangedSubviews: [minValueImageView, volumeSlider, maxValueImageView])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
         stackView.spacing = 10.0

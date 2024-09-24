@@ -82,40 +82,10 @@ class TrackDetailsView: UIView {
         trackInfoStackViewSettings()
     }()
     
-    private lazy var backwardButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage("player.backward".uiImage, for: .normal)
-        button.tintColor = .black
-        button.addTarget(self, action: #selector(previousTrackTapped), for: .touchUpInside)
-        return button
-    }()
-    
-    private lazy var playStopButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage("player.pause".uiImage, for: .normal)
-        button.tintColor = .black
-        button.addTarget(self, action: #selector(playStopButtonTapped), for: .touchUpInside)
-        return button
-    }()
-    
-    private lazy var forwardButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage("player.forward".uiImage, for: .normal)
-        button.tintColor = .black
-        button.addTarget(self, action: #selector(nextTrackTapped), for: .touchUpInside)
-        return button
-    }()
-    
-    private lazy var trackPlayerStackView: UIStackView = {
-        trackPlayerStackViewSettings()
-    }()
-    
+    private lazy var trackPlayerView = TrackPlayerView()
     private lazy var soundVolumeSlider = SoundVolumeSlider()
     
-    private let avPlayer: AVPlayer = {
+    private let player: AVPlayer = {
         let player = AVPlayer()
         player.automaticallyWaitsToMinimizeStalling = false
         return player
@@ -153,34 +123,12 @@ class TrackDetailsView: UIView {
     @objc func handlePerformanceProgressSlider() {
         let percentage = performanceProgressSlider.value
         
-        guard let duration = avPlayer.currentItem?.duration else { return }
+        guard let duration = player.currentItem?.duration else { return }
         let durationInSeconds = CMTimeGetSeconds(duration)
         let seekTimeInSeconds = Float64(percentage) * durationInSeconds
         let seetTime = CMTimeMakeWithSeconds(seekTimeInSeconds, preferredTimescale: 1)
         
-        avPlayer.seek(to: seetTime)
-    }
-    
-    @objc func playStopButtonTapped() {
-        if avPlayer.timeControlStatus == .paused {
-            avPlayer.play()
-            playStopButton.setImage("player.pause".uiImage, for: .normal)
-            trackCoverImageView.enlargeTrackCover()
-        } else {
-            avPlayer.pause()
-            playStopButton.setImage("player.play".uiImage, for: .normal)
-            trackCoverImageView.reduceTrackCover()
-        }
-    }
-    
-    @objc func previousTrackTapped() {
-        guard let model = delegate?.moveBackForPreviousTrack() else { return }
-        configure(with: model)
-    }
-    
-    @objc func nextTrackTapped() {
-        guard let model = delegate?.moveForwardForPreviousTrack() else { return }
-        configure(with: model)
+        player.seek(to: seetTime)
     }
     
     // MARK: - Private methods
@@ -188,25 +136,25 @@ class TrackDetailsView: UIView {
         guard let url = URL(string: previewUrl) else { return }
         let playerItem = AVPlayerItem(url: url)
         
-        avPlayer.replaceCurrentItem(with: playerItem)
-        avPlayer.play()
+        player.replaceCurrentItem(with: playerItem)
+        player.play()
     }
     
     private func monitorStartTime() {
         let time = CMTimeMake(value: 1, timescale: 2)
         let times = [NSValue(time: time)]
         
-        avPlayer.addBoundaryTimeObserver(forTimes: times, queue: .main) { [weak self] in
+        player.addBoundaryTimeObserver(forTimes: times, queue: .main) { [weak self] in
             self?.trackCoverImageView.enlargeTrackCover()
         }
     }
     
     private func observePlayerCurrentTime() {
         let interval = CMTimeMake(value: 1, timescale: 2)
-        avPlayer.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
+        player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
             self?.backwardLabel.text = time.formattedTime()
             
-            let durationTime = self?.avPlayer.currentItem?.duration ?? CMTimeMake(value: 1, timescale: 1)
+            let durationTime = self?.player.currentItem?.duration ?? CMTimeMake(value: 1, timescale: 1)
             let durationText = (durationTime - time).formattedTime() ?? ""
             
             self?.forwardLabel.text = "-\(durationText)"
@@ -215,8 +163,8 @@ class TrackDetailsView: UIView {
     }
     
     private func updateCurrentTimeSlider() {
-        let currentTimeSeconds = CMTimeGetSeconds(avPlayer.currentTime())
-        let durationSeconds = CMTimeGetSeconds(avPlayer.currentItem?.duration ?? CMTimeMake(value: 1, timescale: 1))
+        let currentTimeSeconds = CMTimeGetSeconds(player.currentTime())
+        let durationSeconds = CMTimeGetSeconds(player.currentItem?.duration ?? CMTimeMake(value: 1, timescale: 1))
         let percentage = currentTimeSeconds / durationSeconds
         
         performanceProgressSlider.value = Float(percentage)
@@ -292,16 +240,6 @@ extension TrackDetailsView {
         return stackView
     }
     
-    private func trackPlayerStackViewSettings() -> UIStackView {
-        let stackView = UIStackView(arrangedSubviews: [backwardButton, playStopButton, forwardButton])
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.distribution = .fillEqually
-        
-        return stackView
-    }
-    
     // MARK: - Configure
     private func configureUI() {
         backgroundColor = .white
@@ -315,7 +253,7 @@ extension TrackDetailsView {
         setupPerformanceTimeStackView()
         
         setupTrackInfoStackView()
-        setupTrackPlayerStackView()
+        setupTrackPlayerView()
         
         setupSoundVolumeSlider()
     }
@@ -384,11 +322,14 @@ extension TrackDetailsView {
         ])
     }
     
-    private func setupTrackPlayerStackView() {
-        contentStackView.addArrangedSubview(trackPlayerStackView)
+    private func setupTrackPlayerView() {
+        trackPlayerView.delegate = self
+        trackPlayerView.playStopImage = "player.pause".uiImage
+        
+        contentStackView.addArrangedSubview(trackPlayerView)
         
         NSLayoutConstraint.activate([
-            trackPlayerStackView.heightAnchor.constraint(equalTo: trackPlayerStackView.widthAnchor, multiplier: 0.3)
+            trackPlayerView.heightAnchor.constraint(equalTo: contentStackView.widthAnchor, multiplier: 0.3)
         ])
     }
     
@@ -406,6 +347,31 @@ extension TrackDetailsView {
 // MARK: - SoundVolumeSliderDelegate
 extension TrackDetailsView: SoundVolumeSliderDelegate {
     func didUpdateVolume() {
-        avPlayer.volume = soundVolumeSlider.value
+        player.volume = soundVolumeSlider.value
+    }
+}
+
+// MARK: - TrackPlayerViewDelegate
+extension TrackDetailsView: TrackPlayerViewDelegate {
+    func userDidRequestPreviousTrack() {
+        guard let model = delegate?.moveBackForPreviousTrack() else { return }
+        configure(with: model)
+    }
+    
+    func userDidRequestPlayStopTrack() {
+        if player.timeControlStatus == .paused {
+            player.play()
+            trackPlayerView.playStopImage = "player.pause".uiImage
+            trackCoverImageView.enlargeTrackCover()
+        } else {
+            player.pause()
+            trackPlayerView.playStopImage = "player.play".uiImage
+            trackCoverImageView.reduceTrackCover()
+        }
+    }
+    
+    func userDidRequestNextTrack() {
+        guard let model = delegate?.moveForwardForPreviousTrack() else { return }
+        configure(with: model)
     }
 }

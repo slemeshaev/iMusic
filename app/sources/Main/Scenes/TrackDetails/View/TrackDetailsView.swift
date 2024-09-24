@@ -179,11 +179,11 @@ class TrackDetailsView: UIView {
         if avPlayer.timeControlStatus == .paused {
             avPlayer.play()
             playStopButton.setImage("player.pause".uiImage, for: .normal)
-            enlargeTrackCoverImageView()
+            trackCoverImageView.enlargeTrackCover()
         } else {
             avPlayer.pause()
             playStopButton.setImage("player.play".uiImage, for: .normal)
-            reduceTrackCoverImageView()
+            trackCoverImageView.reduceTrackCover()
         }
     }
     
@@ -211,7 +211,7 @@ class TrackDetailsView: UIView {
         let times = [NSValue(time: time)]
         
         avPlayer.addBoundaryTimeObserver(forTimes: times, queue: .main) { [weak self] in
-            self?.enlargeTrackCoverImageView()
+            self?.trackCoverImageView.enlargeTrackCover()
         }
     }
     
@@ -234,36 +234,6 @@ class TrackDetailsView: UIView {
         let percentage = currentTimeSeconds / durationSeconds
         
         performanceProgressSlider.value = Float(percentage)
-    }
-    
-    // MARK: - Animations
-    private func enlargeTrackCoverImageView() {
-        UIView.animate(
-            withDuration: 1.0,
-            delay: 0.0,
-            usingSpringWithDamping: 0.5,
-            initialSpringVelocity: 1.0,
-            options: .curveEaseInOut,
-            animations: {
-                self.trackCoverImageView.transform = .identity
-            },
-            completion: nil
-        )
-    }
-    
-    private func reduceTrackCoverImageView() {
-        UIView.animate(
-            withDuration: 1.0,
-            delay: 0.0,
-            usingSpringWithDamping: 0.5,
-            initialSpringVelocity: 1.0,
-            options: .curveEaseInOut,
-            animations: {
-                let scale: CGFloat = 0.8
-                self.trackCoverImageView.transform = CGAffineTransform(scaleX: scale, y: scale)
-            },
-            completion: nil
-        )
     }
 }
 

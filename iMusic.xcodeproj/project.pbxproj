@@ -11,6 +11,7 @@
 		663C1D8E2C9DA6CD00B8F2E3 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663C1D8D2C9DA6CD00B8F2E3 /* ImageLoader.swift */; };
 		663C1D902C9DAF6100B8F2E3 /* UIImageView+Internal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663C1D8F2C9DAF6100B8F2E3 /* UIImageView+Internal.swift */; };
 		663C1D922C9DB1E800B8F2E3 /* ImageLoadingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663C1D912C9DB1E800B8F2E3 /* ImageLoadingError.swift */; };
+		6660E4BE2CA2CA0600CB44E3 /* UIImageView+Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6660E4BD2CA2CA0600CB44E3 /* UIImageView+Animation.swift */; };
 		666CD18A2C9BEE13007DB39A /* SearchMusicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666CD1892C9BEE13007DB39A /* SearchMusicViewController.swift */; };
 		666CD18C2C9BF545007DB39A /* TrackDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666CD18B2C9BF545007DB39A /* TrackDto.swift */; };
 		666CD18E2C9C004D007DB39A /* SearchMusicInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666CD18D2C9C004D007DB39A /* SearchMusicInteractor.swift */; };
@@ -43,6 +44,7 @@
 		663C1D8D2C9DA6CD00B8F2E3 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		663C1D8F2C9DAF6100B8F2E3 /* UIImageView+Internal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Internal.swift"; sourceTree = "<group>"; };
 		663C1D912C9DB1E800B8F2E3 /* ImageLoadingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoadingError.swift; sourceTree = "<group>"; };
+		6660E4BD2CA2CA0600CB44E3 /* UIImageView+Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Animation.swift"; sourceTree = "<group>"; };
 		666CD1892C9BEE13007DB39A /* SearchMusicViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMusicViewController.swift; sourceTree = "<group>"; };
 		666CD18B2C9BF545007DB39A /* TrackDto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackDto.swift; sourceTree = "<group>"; };
 		666CD18D2C9C004D007DB39A /* SearchMusicInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMusicInteractor.swift; sourceTree = "<group>"; };
@@ -90,6 +92,15 @@
 				663C1D912C9DB1E800B8F2E3 /* ImageLoadingError.swift */,
 			);
 			path = ImageLoader;
+			sourceTree = "<group>";
+		};
+		6660E4BF2CA2CA1100CB44E3 /* UIImageView */ = {
+			isa = PBXGroup;
+			children = (
+				6660E4BD2CA2CA0600CB44E3 /* UIImageView+Animation.swift */,
+				663C1D8F2C9DAF6100B8F2E3 /* UIImageView+Internal.swift */,
+			);
+			path = UIImageView;
 			sourceTree = "<group>";
 		};
 		666CD1932C9C0A18007DB39A /* Services */ = {
@@ -300,11 +311,11 @@
 		6692CBFD2C9CB7DF00E0435A /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				6660E4BF2CA2CA1100CB44E3 /* UIImageView */,
 				6692CBFE2C9CB80400E0435A /* String+Image.swift */,
 				6692CC002C9CB81C00E0435A /* String+Color.swift */,
 				66BEDD8B2CA1980B008438C4 /* CMTime+Internal.swift */,
 				6692CC042C9CBCE300E0435A /* UIViewController+Internal.swift */,
-				663C1D8F2C9DAF6100B8F2E3 /* UIImageView+Internal.swift */,
 				667CE6722CA057AE0001D986 /* UIWindow+Internal.swift */,
 			);
 			path = Extensions;
@@ -400,6 +411,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6692CBFA2C9CB6FE00E0435A /* Configurable.swift in Sources */,
+				6660E4BE2CA2CA0600CB44E3 /* UIImageView+Animation.swift in Sources */,
 				66225FCD2C9DD4680071F920 /* SearchMusicViewFooter.swift in Sources */,
 				666CD19F2C9C188A007DB39A /* Request.swift in Sources */,
 				666CD18A2C9BEE13007DB39A /* SearchMusicViewController.swift in Sources */,

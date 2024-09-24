@@ -42,7 +42,7 @@ class SoundVolumeSlider: UIView {
     private lazy var soundVolumeSlider: UISlider = {
         let slider = UISlider()
         slider.translatesAutoresizingMaskIntoConstraints = false
-        slider.value = value
+        slider.value = 0.5
         slider.addTarget(self, action: #selector(handleSoundVolomeSlider), for: .valueChanged)
         return slider
     }()

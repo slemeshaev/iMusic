@@ -69,6 +69,7 @@ extension SearchMusicViewController: UITableViewDelegate, UITableViewDataSource 
         guard let track = tracks.atIndex(indexPath.row) else { return }
         
         let trackDetailsView = TrackDetailsView(frame: view.bounds)
+        trackDetailsView.presenter = TrackDetailsPresenterImpl(view: trackDetailsView)
         trackDetailsView.delegate = self
         
         let window = UIWindow.keyWindow

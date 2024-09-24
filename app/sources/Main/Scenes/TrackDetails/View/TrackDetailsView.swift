@@ -58,30 +58,7 @@ class TrackDetailsView: UIView {
         performanceTimeStackViewSettings()
     }()
     
-    private lazy var trackTitleLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .boldSystemFont(ofSize: 24.0)
-        label.textAlignment = .center
-        label.textColor = .black
-        label.text = "Track Title"
-        return label
-    }()
-    
-    private lazy var authorTitleLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .systemFont(ofSize: 24.0)
-        label.textAlignment = .center
-        label.textColor = .systemPink
-        label.text = "Author"
-        return label
-    }()
-    
-    private lazy var trackInfoStackView: UIStackView = {
-        trackInfoStackViewSettings()
-    }()
-    
+    private lazy var trackInfoView = TrackInfoView()
     private lazy var trackPlayerView = TrackPlayerView()
     private lazy var soundVolumeSlider = SoundVolumeSlider()
     
@@ -107,8 +84,8 @@ class TrackDetailsView: UIView {
     // MARK: - Interface
     func configure(with model: Configurable) {
         trackCoverImageView.setImage(from: model.bigIcon)
-        trackTitleLabel.text = model.title
-        authorTitleLabel.text = model.subtitle
+        trackInfoView.trackTitle = model.title
+        trackInfoView.artistName = model.subtitle
         
         playTrack(previewUrl: model.previewUrl)
         monitorStartTime()
@@ -231,15 +208,6 @@ extension TrackDetailsView {
         return stackView
     }
     
-    private func trackInfoStackViewSettings() -> UIStackView {
-        let stackView = UIStackView(arrangedSubviews: [trackTitleLabel, authorTitleLabel])
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
-        stackView.alignment = .center
-        
-        return stackView
-    }
-    
     // MARK: - Configure
     private func configureUI() {
         backgroundColor = .white
@@ -252,7 +220,7 @@ extension TrackDetailsView {
         setupPerformanceProgressSlider()
         setupPerformanceTimeStackView()
         
-        setupTrackInfoStackView()
+        setupTrackInfoView()
         setupTrackPlayerView()
         
         setupSoundVolumeSlider()
@@ -313,12 +281,12 @@ extension TrackDetailsView {
         ])
     }
     
-    private func setupTrackInfoStackView() {
-        contentStackView.addArrangedSubview(trackInfoStackView)
+    private func setupTrackInfoView() {
+        contentStackView.addArrangedSubview(trackInfoView)
         
         NSLayoutConstraint.activate([
-            trackInfoStackView.widthAnchor.constraint(equalTo: performanceTimeStackView.widthAnchor),
-            trackInfoStackView.heightAnchor.constraint(equalTo: performanceTimeStackView.widthAnchor, multiplier: 0.2)
+            trackInfoView.widthAnchor.constraint(equalTo: contentStackView.widthAnchor),
+            trackInfoView.heightAnchor.constraint(equalTo: contentStackView.widthAnchor, multiplier: 0.2)
         ])
     }
     

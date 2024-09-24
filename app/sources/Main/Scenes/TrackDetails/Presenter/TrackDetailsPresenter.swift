@@ -18,6 +18,7 @@ protocol TrackDetailsPresenter: AnyObject {
 }
 
 class TrackDetailsPresenterImpl: TrackDetailsPresenter {
+    // MARK: - Properties
     private weak var view: TrackDetailsView?
     
     private let player: AVPlayer = {

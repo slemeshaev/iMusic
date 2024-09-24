@@ -113,17 +113,7 @@ class TrackDetailsView: UIView {
         trackPlayerStackViewSettings()
     }()
     
-    private lazy var volumeSlider: UISlider = {
-        let slider = UISlider()
-        slider.translatesAutoresizingMaskIntoConstraints = false
-        slider.value = 0.5
-        slider.addTarget(self, action: #selector(handleSoundVolomeSlider), for: .valueChanged)
-        return slider
-    }()
-    
-    private lazy var soundValueStackView: UIStackView = {
-        soundValueStackViewSettings()
-    }()
+    private lazy var soundVolumeSlider = SoundVolumeSlider()
     
     private let avPlayer: AVPlayer = {
         let player = AVPlayer()
@@ -169,10 +159,6 @@ class TrackDetailsView: UIView {
         let seetTime = CMTimeMakeWithSeconds(seekTimeInSeconds, preferredTimescale: 1)
         
         avPlayer.seek(to: seetTime)
-    }
-    
-    @objc func handleSoundVolomeSlider() {
-        avPlayer.volume = volumeSlider.value
     }
     
     @objc func playStopButtonTapped() {
@@ -316,27 +302,6 @@ extension TrackDetailsView {
         return stackView
     }
     
-    private func soundValueStackViewSettings() -> UIStackView {
-        let minValueImageView = UIImageView()
-        minValueImageView.translatesAutoresizingMaskIntoConstraints = false
-        minValueImageView.image = "player.min.sound".uiImage
-        minValueImageView.widthAnchor.constraint(equalToConstant: 16.0).isActive = true
-        minValueImageView.heightAnchor.constraint(equalTo: minValueImageView.widthAnchor, multiplier: 0.9).isActive = true
-        
-        let maxValueImageView = UIImageView()
-        maxValueImageView.translatesAutoresizingMaskIntoConstraints = false
-        maxValueImageView.image = "player.max.sound".uiImage
-        maxValueImageView.widthAnchor.constraint(equalToConstant: 16.0).isActive = true
-        maxValueImageView.heightAnchor.constraint(equalTo: maxValueImageView.widthAnchor, multiplier: 0.9).isActive = true
-        
-        let stackView = UIStackView(arrangedSubviews: [minValueImageView, volumeSlider, maxValueImageView])
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .horizontal
-        stackView.spacing = 10.0
-        
-        return stackView
-    }
-    
     // MARK: - Configure
     private func configureUI() {
         backgroundColor = .white
@@ -352,7 +317,7 @@ extension TrackDetailsView {
         setupTrackInfoStackView()
         setupTrackPlayerStackView()
         
-        setupSoundValueStackView()
+        setupSoundVolumeSlider()
     }
     
     // MARK: - Setups
@@ -427,11 +392,20 @@ extension TrackDetailsView {
         ])
     }
     
-    private func setupSoundValueStackView() {
-        contentStackView.addArrangedSubview(soundValueStackView)
+    private func setupSoundVolumeSlider() {
+        soundVolumeSlider.delegate = self
+        
+        contentStackView.addArrangedSubview(soundVolumeSlider)
         
         NSLayoutConstraint.activate([
-            soundValueStackView.heightAnchor.constraint(equalTo: trackPlayerStackView.widthAnchor, multiplier: 0.1)
+            soundVolumeSlider.widthAnchor.constraint(equalTo: contentStackView.widthAnchor)
         ])
+    }
+}
+
+// MARK: - SoundVolumeSliderDelegate
+extension TrackDetailsView: SoundVolumeSliderDelegate {
+    func didUpdateVolume() {
+        avPlayer.volume = soundVolumeSlider.value
     }
 }

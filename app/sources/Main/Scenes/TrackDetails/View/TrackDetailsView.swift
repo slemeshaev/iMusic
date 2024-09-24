@@ -28,36 +28,7 @@ class TrackDetailsView: UIView {
         trackCoverViewSettings()
     }()
     
-    private lazy var backwardLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .left
-        label.text = "00:00"
-        label.textColor = .gray
-        return label
-    }()
-    
-    private lazy var forwardLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .right
-        label.text = "--:--"
-        label.textColor = .gray
-        return label
-    }()
-    
-    private lazy var performanceProgressStackView: UIStackView = {
-        performanceProgressStackViewSettings()
-    }()
-    
-    private lazy var performanceProgressSlider: UISlider = {
-        performanceProgressSliderSettings()
-    }()
-    
-    private lazy var performanceTimeStackView: UIStackView = {
-        performanceTimeStackViewSettings()
-    }()
-    
+    private lazy var trackProgressView = TrackProgressView()
     private lazy var trackInfoView = TrackInfoView()
     private lazy var trackPlayerView = TrackPlayerView()
     private lazy var soundVolumeSlider = SoundVolumeSlider()
@@ -97,17 +68,6 @@ class TrackDetailsView: UIView {
         removeFromSuperview()
     }
     
-    @objc func handlePerformanceProgressSlider() {
-        let percentage = performanceProgressSlider.value
-        
-        guard let duration = player.currentItem?.duration else { return }
-        let durationInSeconds = CMTimeGetSeconds(duration)
-        let seekTimeInSeconds = Float64(percentage) * durationInSeconds
-        let seetTime = CMTimeMakeWithSeconds(seekTimeInSeconds, preferredTimescale: 1)
-        
-        player.seek(to: seetTime)
-    }
-    
     // MARK: - Private methods
     private func playTrack(previewUrl: String) {
         guard let url = URL(string: previewUrl) else { return }
@@ -129,12 +89,12 @@ class TrackDetailsView: UIView {
     private func observePlayerCurrentTime() {
         let interval = CMTimeMake(value: 1, timescale: 2)
         player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
-            self?.backwardLabel.text = time.formattedTime()
+            self?.trackProgressView.backwardText = time.formattedTime()
             
             let durationTime = self?.player.currentItem?.duration ?? CMTimeMake(value: 1, timescale: 1)
             let durationText = (durationTime - time).formattedTime() ?? ""
             
-            self?.forwardLabel.text = "-\(durationText)"
+            self?.trackProgressView.forwardText = "-\(durationText)"
             self?.updateCurrentTimeSlider()
         }
     }
@@ -144,7 +104,7 @@ class TrackDetailsView: UIView {
         let durationSeconds = CMTimeGetSeconds(player.currentItem?.duration ?? CMTimeMake(value: 1, timescale: 1))
         let percentage = currentTimeSeconds / durationSeconds
         
-        performanceProgressSlider.value = Float(percentage)
+        trackProgressView.progressValue = Float(percentage)
     }
 }
 
@@ -182,32 +142,6 @@ extension TrackDetailsView {
         return imageView
     }
     
-    private func performanceProgressStackViewSettings() -> UIStackView {
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
-        stackView.alignment = .center
-        return stackView
-    }
-    
-    private func performanceProgressSliderSettings() -> UISlider {
-        let slider = UISlider()
-        slider.translatesAutoresizingMaskIntoConstraints = false
-        slider.value = 0.0
-        slider.addTarget(self, action: #selector(handlePerformanceProgressSlider), for: .valueChanged)
-        return slider
-    }
-    
-    private func performanceTimeStackViewSettings() -> UIStackView {
-        let stackView = UIStackView(arrangedSubviews: [backwardLabel, forwardLabel])
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .horizontal
-        stackView.distribution = .fillEqually
-        stackView.alignment = .center
-        
-        return stackView
-    }
-    
     // MARK: - Configure
     private func configureUI() {
         backgroundColor = .white
@@ -216,9 +150,7 @@ extension TrackDetailsView {
         setupDragDownButton()
         setupTrackCoverView()
         
-        setupPerformanceProgressStackView()
-        setupPerformanceProgressSlider()
-        setupPerformanceTimeStackView()
+        setupTrackProgressView()
         
         setupTrackInfoView()
         setupTrackPlayerView()
@@ -255,29 +187,14 @@ extension TrackDetailsView {
         ])
     }
     
-    private func setupPerformanceProgressStackView() {
-        contentStackView.addArrangedSubview(performanceProgressStackView)
+    private func setupTrackProgressView() {
+        trackProgressView.delegate = self
+        
+        contentStackView.addArrangedSubview(trackProgressView)
         
         NSLayoutConstraint.activate([
-            performanceProgressStackView.widthAnchor.constraint(equalTo: contentStackView.widthAnchor)
-        ])
-    }
-    
-    private func setupPerformanceProgressSlider() {
-        performanceProgressStackView.addArrangedSubview(performanceProgressSlider)
-        
-        NSLayoutConstraint.activate([
-            performanceProgressSlider.widthAnchor.constraint(equalTo: performanceProgressStackView.widthAnchor),
-            performanceProgressSlider.heightAnchor.constraint(equalTo: performanceProgressStackView.heightAnchor, multiplier: 0.3)
-        ])
-    }
-    
-    private func setupPerformanceTimeStackView() {
-        performanceProgressStackView.addArrangedSubview(performanceTimeStackView)
-        
-        NSLayoutConstraint.activate([
-            performanceTimeStackView.widthAnchor.constraint(equalTo: performanceProgressStackView.widthAnchor),
-            performanceTimeStackView.heightAnchor.constraint(equalTo: performanceProgressStackView.widthAnchor, multiplier: 0.2)
+            trackProgressView.widthAnchor.constraint(equalTo: contentStackView.widthAnchor),
+            trackProgressView.heightAnchor.constraint(equalTo: contentStackView.widthAnchor, multiplier: 0.2)
         ])
     }
     
@@ -341,5 +258,19 @@ extension TrackDetailsView: TrackPlayerViewDelegate {
     func userDidRequestNextTrack() {
         guard let model = delegate?.moveForwardForPreviousTrack() else { return }
         configure(with: model)
+    }
+}
+
+// MARK: - TrackProgressViewDelegate
+extension TrackDetailsView: TrackProgressViewDelegate {
+    func didUpdateProgressTrack() {
+        let percentage = trackProgressView.progressValue
+        
+        guard let duration = player.currentItem?.duration else { return }
+        let durationInSeconds = CMTimeGetSeconds(duration)
+        let seekTimeInSeconds = Float64(percentage) * durationInSeconds
+        let seetTime = CMTimeMakeWithSeconds(seekTimeInSeconds, preferredTimescale: 1)
+        
+        player.seek(to: seetTime)
     }
 }

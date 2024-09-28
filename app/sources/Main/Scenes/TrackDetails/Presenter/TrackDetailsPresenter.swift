@@ -13,7 +13,7 @@ protocol TrackDetailsPresenter: AnyObject {
     func configure(with model: Configurable)
     func playTrack(previewUrl: String)
     func togglePlayPause()
-    func updateVolume()
+    func updateVolume(with value: Float)
     func seek(to percentage: Float)
 }
 
@@ -28,15 +28,15 @@ class TrackDetailsPresenterImpl: TrackDetailsPresenter {
     }()
     
     // MARK: - Init
-    init(view: TrackDetailsView? = nil) {
+    init(view: TrackDetailsView) {
         self.view = view
     }
     
     // MARK: - TrackDetailsPresenter
     func configure(with model: Configurable) {
-        view?.trackCoverImageView.setImage(from: model.bigIcon)
-        view?.trackInfoView.trackTitle = model.title
-        view?.trackInfoView.artistName = model.subtitle
+        view?.trackCoverImagePath = model.bigIcon
+        view?.trackTitle = model.title
+        view?.artistName = model.subtitle
         
         playTrack(previewUrl: model.previewUrl)
     }
@@ -48,8 +48,8 @@ class TrackDetailsPresenterImpl: TrackDetailsPresenter {
         player.replaceCurrentItem(with: playerItem)
         player.play()
         
-        view?.trackPlayerView.playStopImage = "player.pause".uiImage
-        view?.trackCoverImageView.enlargeTrackCover()
+        view?.playStopPath = "player.pause"
+        view?.enlargeCover()
         
         observePlayerCurrentTime()
     }
@@ -57,12 +57,14 @@ class TrackDetailsPresenterImpl: TrackDetailsPresenter {
     func togglePlayPause() {
         if player.timeControlStatus == .paused {
             player.play()
-            view?.trackPlayerView.playStopImage = "player.pause".uiImage
-            view?.trackCoverImageView.enlargeTrackCover()
+            
+            view?.playStopPath = "player.pause"
+            view?.enlargeCover()
         } else {
             player.pause()
-            view?.trackPlayerView.playStopImage = "player.play".uiImage
-            view?.trackCoverImageView.reduceTrackCover()
+            
+            view?.playStopPath = "player.play"
+            view?.reduceCover()
         }
     }
     
@@ -76,8 +78,8 @@ class TrackDetailsPresenterImpl: TrackDetailsPresenter {
         player.seek(to: seekTime)
     }
     
-    func updateVolume() {
-        player.volume = view?.soundVolumeSlider.value ?? 0.5
+    func updateVolume(with value: Float) {
+        player.volume = value
     }
     
     // MARK: - Private
@@ -85,12 +87,12 @@ class TrackDetailsPresenterImpl: TrackDetailsPresenter {
         let interval = CMTimeMake(value: 1, timescale: 2)
         
         player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
-            self?.view?.trackProgressView.backwardText = time.formattedTime()
+            self?.view?.rewindDurationText = time.formattedTime()
             
             let durationTime = self?.player.currentItem?.duration ?? CMTimeMake(value: 1, timescale: 1)
             let durationText = (durationTime - time).formattedTime() ?? ""
             
-            self?.view?.trackProgressView.forwardText = "-\(durationText)"
+            self?.view?.forwardDurationText = "-\(durationText)"
             self?.updateCurrentTimeSlider()
         }
     }
@@ -100,6 +102,6 @@ class TrackDetailsPresenterImpl: TrackDetailsPresenter {
         let durationSeconds = CMTimeGetSeconds(player.currentItem?.duration ?? CMTimeMake(value: 1, timescale: 1))
         let percentage = currentTimeSeconds / durationSeconds
         
-        view?.trackProgressView.progressValue = Float(percentage)
+        view?.progressValue = Float(percentage)
     }
 }

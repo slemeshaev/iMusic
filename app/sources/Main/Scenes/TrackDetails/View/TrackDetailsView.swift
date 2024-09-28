@@ -24,16 +24,64 @@ class TrackDetailsView: UIView {
         dragDownButtonSettings()
     }()
     
-    lazy var trackCoverImageView: UIImageView = {
+    private lazy var trackCoverImageView: UIImageView = {
         trackCoverViewSettings()
     }()
     
-    lazy var trackProgressView = TrackProgressView()
-    lazy var trackInfoView = TrackInfoView()
-    lazy var trackPlayerView = TrackPlayerView()
-    lazy var soundVolumeSlider = SoundVolumeSlider()
+    private lazy var trackProgressView = TrackProgressView()
+    private lazy var trackInfoView = TrackInfoView()
+    private lazy var trackPlayerView = TrackPlayerView()
+    private lazy var soundVolumeSlider = SoundVolumeSlider()
     
-    // MARK: - Properties
+    // MARK: - Public Properties
+    var trackCoverImagePath = String() {
+        didSet {
+            trackCoverImageView.setImage(from: trackCoverImagePath)
+        }
+    }
+    
+    var trackTitle = String() {
+        didSet {
+            trackInfoView.trackTitle = trackTitle
+        }
+    }
+    
+    var artistName = String() {
+        didSet {
+            trackInfoView.artistName = artistName
+        }
+    }
+    
+    var playStopPath = String() {
+        didSet {
+            trackPlayerView.playStopImage = playStopPath.uiImage
+        }
+    }
+    
+    var soundVolume: Float = 0.5 {
+        didSet {
+            soundVolumeSlider.value = soundVolume
+        }
+    }
+    
+    var rewindDurationText: String? {
+        didSet {
+            trackProgressView.backwardText = rewindDurationText
+        }
+    }
+    
+    var forwardDurationText: String? {
+        didSet {
+            trackProgressView.forwardText = forwardDurationText
+        }
+    }
+    
+    var progressValue: Float = 0.0 {
+        didSet {
+            trackProgressView.progressValue = progressValue
+        }
+    }
+    
     var presenter: TrackDetailsPresenter?
     weak var delegate: TrackMovingDelegate?
     
@@ -52,8 +100,16 @@ class TrackDetailsView: UIView {
         presenter?.configure(with: model)
     }
     
+    func enlargeCover() {
+        trackCoverImageView.enlargeTrackCover()
+    }
+    
+    func reduceCover() {
+        trackCoverImageView.reduceTrackCover()
+    }
+    
     // MARK: - Actions
-    @objc func dragDownButtonTapped() {
+    @objc private func dragDownButtonTapped() {
         removeFromSuperview()
     }
 }
@@ -180,8 +236,8 @@ extension TrackDetailsView {
 
 // MARK: - SoundVolumeSliderDelegate
 extension TrackDetailsView: SoundVolumeSliderDelegate {
-    func didUpdateVolume() {
-        presenter?.updateVolume()
+    func didUpdateVolume(with value: Float) {
+        presenter?.updateVolume(with: value)
     }
 }
 

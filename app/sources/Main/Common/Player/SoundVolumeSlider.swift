@@ -9,7 +9,7 @@
 import UIKit
 
 protocol SoundVolumeSliderDelegate: AnyObject {
-    func didUpdateVolume()
+    func didUpdateVolume(with value: Float)
 }
 
 class SoundVolumeSlider: UIView {
@@ -60,7 +60,7 @@ class SoundVolumeSlider: UIView {
     // MARK: - Actions
     @objc private func handleSoundVolomeSlider() {
         value = soundVolumeSlider.value
-        delegate?.didUpdateVolume()
+        delegate?.didUpdateVolume(with: value)
     }
     
     // MARK: - Private

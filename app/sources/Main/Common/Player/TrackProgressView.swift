@@ -56,7 +56,8 @@ class TrackProgressView: UIView {
     private lazy var progressSlider: UISlider = {
         let slider = UISlider()
         slider.translatesAutoresizingMaskIntoConstraints = false
-        slider.value = progressValue
+        slider.setThumbImage(UIImage(), for: .normal)
+        slider.value = 0.5
         slider.addTarget(self, action: #selector(handleProgressSlider), for: .valueChanged)
         return slider
     }()

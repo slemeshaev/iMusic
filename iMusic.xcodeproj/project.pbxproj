@@ -240,7 +240,6 @@
 				667046D62C99C73500D02583 /* Interactor */,
 				667046D72C99C75C00D02583 /* Presenter */,
 				667046D82C99C77E00D02583 /* Entity */,
-				667046D92C99C78F00D02583 /* Router */,
 			);
 			path = SearchMusic;
 			sourceTree = "<group>";
@@ -279,13 +278,6 @@
 				6692CBF02C9C835E00E0435A /* Domain */,
 			);
 			path = Entity;
-			sourceTree = "<group>";
-		};
-		667046D92C99C78F00D02583 /* Router */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Router;
 			sourceTree = "<group>";
 		};
 		667CE66E2CA049040001D986 /* TrackDetails */ = {

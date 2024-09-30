@@ -87,13 +87,14 @@ class TrackDetailsPresenterImpl: TrackDetailsPresenter {
         let interval = CMTimeMake(value: 1, timescale: 2)
         
         player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
-            self?.view?.rewindDurationText = time.formattedTime()
+            guard let self = self else { return }
+            self.view?.rewindDurationText = time.formattedTime()
             
-            let durationTime = self?.player.currentItem?.duration ?? CMTimeMake(value: 1, timescale: 1)
+            let durationTime = self.player.currentItem?.duration ?? CMTimeMake(value: 1, timescale: 1)
             let durationText = (durationTime - time).formattedTime() ?? ""
             
-            self?.view?.forwardDurationText = "-\(durationText)"
-            self?.updateCurrentTimeSlider()
+            self.view?.forwardDurationText = "-\(durationText)"
+            self.updateCurrentTimeSlider()
         }
     }
     

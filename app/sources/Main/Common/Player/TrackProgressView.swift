@@ -57,7 +57,7 @@ class TrackProgressView: UIView {
         let slider = UISlider()
         slider.translatesAutoresizingMaskIntoConstraints = false
         slider.setThumbImage(UIImage(), for: .normal)
-        slider.value = 0.5
+        slider.value = 0.0
         slider.addTarget(self, action: #selector(handleProgressSlider), for: .valueChanged)
         return slider
     }()
